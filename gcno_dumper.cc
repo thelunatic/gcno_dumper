@@ -66,17 +66,17 @@ int gcno_dumper(std::string filename){
           
 	  //reading magic 
 
-          std::cout << "MAGIC    :  0x"<< data_reader (file, size) << std::endl;
+          dumpfile << "MAGIC    :  0x"<< data_reader (file, size) << std::endl;
  
 	 //read version
 	 // after reading the first 4 bytes,
 	 // we know that the next int32 ( i.e 4bytes)
 	 // is version
-	 std::cout <<"VERSION  :  0x"<< data_reader (file, size) <<std::endl; 
+	 dumpfile <<"VERSION  :  0x"<< data_reader (file, size) <<std::endl; 
 		 
 	 //read stamp
 	 //next 4 bytes is stamp
-	 std::cout<< "TIMESTAMP:  0x"<< data_reader(file, size) <<std::endl;
+	 dumpfile<< "TIMESTAMP:  0x"<< data_reader(file, size) <<std::endl;
 
 	 //
 	 //READING RECORD
@@ -86,19 +86,18 @@ int gcno_dumper(std::string filename){
 	 //
 	 //READING NOTES
 	 //
-         std::cout << std::endl << "READING NOTE RECORDS \n" << std::endl; 
+         dumpfile << std::endl << "READING NOTE RECORDS \n" << std::endl; 
 	 
 	 //note: unit function-graph
 	 //unit: header int32:checksum string:source
-	 data_reader(file, 2);
-	 std::cout<<"UNIT TAG      :  "<< data_reader(file, 2)<<std::endl;	 
-	 std::cout<<"UNIT LENGTH   :  "<< length_reader(file) <<std::endl;
+	 dumpfile<<"UNIT TAG      :  "<< data_reader(file, size)<<std::endl;	 
+	 dumpfile<<"UNIT LENGTH   :  "<< length_reader(file) <<std::endl;
 	 data_reader(file, size);
 	 data_reader(file, size);
-	 std::cout<<"UNIT CHECKSUM :  0x"<< data_reader(file, size) <<std::endl;
+	 dumpfile<<"UNIT CHECKSUM :  0x"<< data_reader(file, size) <<std::endl;
 
-	 std::cout<<"SOURCE LENGTH : "<< length_reader(file) <<std::endl;
-	 std::cout<<"SOURCE NAME   : "<< string_reader(file) <<std::endl;
+	 dumpfile<<"SOURCE LENGTH : "<< length_reader(file) <<std::endl;
+	 dumpfile<<"SOURCE NAME   : "<< string_reader(file) <<std::endl;
 
 	 return 1;
 

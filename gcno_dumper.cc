@@ -90,14 +90,36 @@ int gcno_dumper(std::string filename){
 	 
 	 //note: unit function-graph
 	 //unit: header int32:checksum string:source
-	 dumpfile<<"UNIT TAG      :  "<< data_reader(file, size)<<std::endl;	 
-	 dumpfile<<"UNIT LENGTH   :  "<< length_reader(file) <<std::endl;
-	 data_reader(file, size);
-	 data_reader(file, size);
-	 dumpfile<<"UNIT CHECKSUM :  0x"<< data_reader(file, size) <<std::endl;
+	 //TODO: tag_reader
+	 data_reader(file, 3);
+	 dumpfile<<"FUNCTION TAG         :  "<< data_reader(file, 1)<<std::endl;	 
+	 dumpfile<<"FUNCTION LENGTH      :  "<< length_reader(file) <<std::endl;
+	 dumpfile<<"FUNCTION IDENT       :  0x"<< data_reader(file, size)<<std::endl;
+	
+	 //function-graph : announce_function basic_blocks {arcs | lines}
+	 //announce_function: header int32:ident int32:checksum string: name
+	 //            	      string: source int32: lineno
+	 dumpfile<<"LINE_NO CHECKSUM     :  0x"<< data_reader(file, size) <<std::endl;
+	 dumpfile<<"CFG CHECKSUM         :  0x"<< data_reader(file, size) <<std::endl;
 
-	 dumpfile<<"SOURCE LENGTH : "<< length_reader(file) <<std::endl;
-	 dumpfile<<"SOURCE NAME   : "<< string_reader(file) <<std::endl;
+	 dumpfile<<"FUNCTION NAME LENGTH : "<< length_reader(file) <<std::endl;
+	 dumpfile<<"FUNCTION NAME        : "<< string_reader(file) <<std::endl;
+         dumpfile<<"SOURCE NAME LENGTH   : "<< length_reader(file) <<std::endl;
+         dumpfile<<"SOURCE NAME          : "<< string_reader(file) <<std::endl;
+	 dumpfile<<"LINE NUMBER          : "<< length_reader(file) <<std::endl;
+
+	 //basic_block : header int32:flags*
+	 //arcs : header int32: block_no arc*
+	 //arc : int32: dest_block int32: flags
+	 //lines: header int32: block_no line*
+	 //       int32:0 string:NULL
+	 //line: int32:line_no | int32:0 string:filename
+
+	 //TODO: tag_reader
+	// data_reader(file, 2);
+	// dumpfile<<"BLOCK TAG            : "<< data_reader(file, 2) << std::endl;
+	// dumpfile<<"BLOCK LENGTH         : "<< length_reader(file) << std::endl;
+	 //dumpfile<<"FLAGS                : "<< data_reader(file, size) << std::endl;
 
 	 return 1;
 

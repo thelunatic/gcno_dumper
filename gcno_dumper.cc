@@ -69,7 +69,7 @@ int gcno_dumper(std::string filename){
 
   if (file.is_open()){
 	 
-	  std::cout<<"\n===========================================================\n"
+	  dumpfile<<"\n===========================================================\n"
 	           <<" GCNO DUMP FOR "<< filename
 		   <<"\n===========================================================\n";
 	  //
@@ -78,17 +78,17 @@ int gcno_dumper(std::string filename){
           
 	  //reading magic 
 
-          std::cout << "MAGIC    :  0x"<< data_reader (file, size) << std::endl;
+          dumpfile << "MAGIC    :  0x"<< data_reader (file, size) << std::endl;
  
 	 //read version
 	 // after reading the first 4 bytes,
 	 // we know that the next int32 ( i.e 4bytes)
 	 // is version
-	 std::cout <<"VERSION  :  0x"<< data_reader (file, size) <<std::endl; 
+	 dumpfile <<"VERSION  :  0x"<< data_reader (file, size) <<std::endl; 
 		 
 	 //read stamp
 	 //next 4 bytes is stamp
-	 std::cout<< "TIMESTAMP:  0x"<< data_reader(file, size) <<std::endl;
+	 dumpfile<< "TIMESTAMP:  0x"<< data_reader(file, size) <<std::endl;
 
 	 //
 	 //READING RECORD
@@ -98,25 +98,25 @@ int gcno_dumper(std::string filename){
 	 //
 	 //READING NOTES
 	 //
-         std::cout << std::endl << "READING NOTE RECORDS \n" << std::endl; 
+         dumpfile << std::endl << "READING NOTE RECORDS \n" << std::endl; 
 	 
 	 //note: unit function-graph
 	 //unit: header int32:checksum string:source
-	 std::cout<<"FUNCTION TAG         :  "<< tag_reader(file)<<std::endl;	 
-	 std::cout<<"FUNCTION LENGTH      :  "<< length_reader(file) <<std::endl;
-	 std::cout<<"FUNCTION IDENT       :  0x"<< data_reader(file, size)<<std::endl;
+	 dumpfile<<"FUNCTION TAG         :  "<< tag_reader(file)<<std::endl;	 
+	 dumpfile<<"FUNCTION LENGTH      :  "<< length_reader(file) <<std::endl;
+	 dumpfile<<"FUNCTION IDENT       :  0x"<< data_reader(file, size)<<std::endl;
 	
 	 //function-graph : announce_function basic_blocks {arcs | lines}
 	 //announce_function: header int32:ident int32:checksum string: name
 	 //            	      string: source int32: lineno
-	 std::cout<<"LINE_NO CHECKSUM     :  0x"<< data_reader(file, size) <<std::endl;
-	 std::cout<<"CFG CHECKSUM         :  0x"<< data_reader(file, size) <<std::endl;
+	 dumpfile<<"LINE_NO CHECKSUM     :  0x"<< data_reader(file, size) <<std::endl;
+	 dumpfile<<"CFG CHECKSUM         :  0x"<< data_reader(file, size) <<std::endl;
 
-	 std::cout<<"FUNCTION NAME LENGTH : "<< length_reader(file) <<std::endl;
-	 std::cout<<"FUNCTION NAME        : "<< string_reader(file) <<std::endl;
-         std::cout<<"SOURCE NAME LENGTH   : "<< length_reader(file) <<std::endl;
-         std::cout<<"SOURCE NAME          : "<< string_reader(file) <<std::endl;
-	 std::cout<<"LINE NUMBER          : "<< length_reader(file) <<std::endl;
+	 dumpfile<<"FUNCTION NAME LENGTH : "<< length_reader(file) <<std::endl;
+	 dumpfile<<"FUNCTION NAME        : "<< string_reader(file) <<std::endl;
+         dumpfile<<"SOURCE NAME LENGTH   : "<< length_reader(file) <<std::endl;
+         dumpfile<<"SOURCE NAME          : "<< string_reader(file) <<std::endl;
+	 dumpfile<<"LINE NUMBER          : "<< length_reader(file) <<std::endl;
 
 	 //basic_block : header int32:flags*
 	 //arcs : header int32: block_no arc*
@@ -125,26 +125,26 @@ int gcno_dumper(std::string filename){
 	 //       int32:0 string:NULL
 	 //line: int32:line_no | int32:0 string:filename
 
-	 std::cout<<"\nBLOCK TAG            : "<< tag_reader(file) << std::endl;
+	 dumpfile<<"\nBLOCK TAG            : "<< tag_reader(file) << std::endl;
 	 block_count = length_reader(file);
-	 std::cout<<"NO. OF BLOCKS        : "<< block_count << std::endl;
+	 dumpfile<<"NO. OF BLOCKS        : "<< block_count << std::endl;
 	 for(int i=0, e = block_count; i != e; ++i){ 
 	 //read block flags
 	 	if ( data_reader(file, size) == "0000")
 			continue;
-	 	std::cout<<"FLAGS                : "<< data_reader(file, size) << std::endl;
+	 	dumpfile<<"FLAGS                : "<< data_reader(file, size) << std::endl;
 	 }
 	 //read arcs per Basic_Block
 	 for (int i = 0 ; i < block_count - 1; ++i){
-	     std::cout<< "\n\nARCS TAG             : " << tag_reader(file) << std::endl;
+	     dumpfile<< "\n\nARCS TAG             : " << tag_reader(file) << std::endl;
 	     int arcs_count = length_reader(file);
-	     std::cout<< "ARCS LENGTH          : " << arcs_count << std::endl; 
-	     std::cout<< "BLOCK NO.            : " << data_reader(file, size) << std::endl;
-	     std::cout<< "DEST. BLOCK          : " << data_reader(file, size) << std::endl;
-             std::cout<< "FLAGs                : " ;
+	     dumpfile<< "ARCS LENGTH          : " << arcs_count << std::endl; 
+	     dumpfile<< "BLOCK NO.            : " << data_reader(file, size) << std::endl;
+	     dumpfile<< "DEST. BLOCK          : " << data_reader(file, size) << std::endl;
+             dumpfile<< "FLAGs                : " ;
 	     for (int j = 0; j < arcs_count-2; ++j)
-	         std::cout<< data_reader(file, size) << ",";
-	     std::cout<<"\n\n";
+	         dumpfile<< data_reader(file, size) << ",";
+	     dumpfile<<"\n\n";
 	}
 	int block_number = 0;
 	std::string tag;
@@ -156,18 +156,18 @@ int gcno_dumper(std::string filename){
 	block_number 	= length_reader(file);
 	if (block_number > block_count) break;
 
-	std::cout<< "LINE TAG             : " << tag << std::endl;
-	std::cout<< "LINE LENGTH          : " << length_buff << std::endl;
-	std::cout<< "BLOCK NUMBER         : " << block_number << std::endl;
-	std::cout<< "LINE NO.             : " << data_reader(file, size) << std::endl;
+	dumpfile<< "LINE TAG             : " << tag << std::endl;
+	dumpfile<< "LINE LENGTH          : " << length_buff << std::endl;
+	dumpfile<< "BLOCK NUMBER         : " << block_number << std::endl;
+	dumpfile<< "LINE NO.             : " << data_reader(file, size) << std::endl;
 	length_buff -= length_reader(file); //subtracting the length of string
 	length_buff -= 2; //for block no. and line no.
-	//std::cout << "FILENAME LENGTH     : " << length_reader(file) << std::endl;
-        std::cout<< "FILENAME             : " << string_reader(file) << std::endl;
+	//dumpfile << "FILENAME LENGTH     : " << length_reader(file) << std::endl;
+        dumpfile<< "FILENAME             : " << string_reader(file) << std::endl;
 	length_buff -= 1; // int32: 0
 	//data_reader(file, length_buff*4);
 	file.seekg( length_buff*4, std::ios::cur);
-	std::cout<< "\n";
+	dumpfile<< "\n";
 	}
 
         return 1;
